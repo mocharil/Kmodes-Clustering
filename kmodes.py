@@ -2,30 +2,15 @@ import findspark
 findspark.init()
 import pyspark
 from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
 from pyspark.sql.types import *
 
 conf = pyspark.SparkConf().setAll([('spark.executor.memory', '8g'), ('spark.driver.memory','20g'), ('spark.driver.maxResultSize','20g'), ("spark.ui.showConsoleProgress", "false")])
 spark = SparkSession.builder.master('local[12]').config(conf=conf).appName('wo').getOrCreate()
-
-import shutil
-import os
-import random
-import re
-import string
-import nltk
-import string
 from tqdm import tqdm
-from text_processor.text_processor import TextProcessor
-tp = TextProcessor()
-from text_processor.stopwords_loader import stopwords_loader
-stopwords = stopwords_loader()
 import pandas as pd
-from datetime import datetime, timedelta
-from dateutil.parser import parse
 import numpy as np
 
-df_conglomerate=spark.read.json('/root/fachrul/2019/data-structure/aril_result/fb-account-like-conglomerate.json')
+df_conglomerate=spark.read.json('./fb-account-like-conglomerate.json')
 
 X=np.array(df_conglomerate.select('age_range',
  'city',
@@ -51,7 +36,6 @@ from matplotlib import style
 import pandas as pd
 
 km = KModes(n_clusters=8, init='Huang', n_init=8,verbose=1)
-print('predict')
 clusters = km.fit_predict(X)
 
 # Print the cluster centroids
@@ -65,7 +49,7 @@ for i,j in tqdm(zip(km.labels_,syms)):
 
 #save result clustering
 dx=pd.DataFrame(result)
-dx.to_csv('hasil_clustering_conglomerate.csv', index=False)
+dx.to_csv('clustering_account_conglomerate.csv', index=False)
 
 
 #elbow method
