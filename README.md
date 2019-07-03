@@ -1,2 +1,2 @@
-# Kmodes--Clustering
+# Kmodes-Clustering
 Clustering Categorical Data
